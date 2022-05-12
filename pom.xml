@@ -28,7 +28,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>tech.tresearchgroup.wrappers.handbrake.Main</mainClass>
+                            <mainClass>tech.tresearchgroup.wrappers.fpcalc.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
