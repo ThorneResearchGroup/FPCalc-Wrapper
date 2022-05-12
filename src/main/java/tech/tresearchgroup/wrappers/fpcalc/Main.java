@@ -1,9 +1,8 @@
-package tech.tresearchgroup.fpcalc;
+package tech.tresearchgroup.wrappers.fpcalc;
 
-import lombok.Data;
 import picocli.CommandLine;
-import tech.tresearchgroup.fpcalc.controller.FPCalcController;
-import tech.tresearchgroup.fpcalc.model.FPCalcOptions;
+import tech.tresearchgroup.wrappers.fpcalc.controller.FPCalcController;
+import tech.tresearchgroup.wrappers.fpcalc.model.FPCalcOptions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-@Data
-public class FPCalc implements Callable<Integer> {
+public class Main implements Callable<Integer> {
     @CommandLine.Parameters(index = "0")
     private String file;
 
@@ -24,46 +22,41 @@ public class FPCalc implements Callable<Integer> {
     public Integer call() {
         List<String> options = new ArrayList<>();
         options.add("fpcalc");
-        options.addAll(FPCalcController.getOptions(fpCalcOptions));
-        options.add(file);
-        execute(options);
-        return 0;
-    }
-
-    public String getFingerprint() {
-        List<String> options = new ArrayList<>();
-        options.add("fpcalc");
-        options.addAll(FPCalcController.getOptions(fpCalcOptions));
+        if(fpCalcOptions != null) {
+            options.addAll(FPCalcController.getOptions(fpCalcOptions));
+        }
         options.add(file);
         return execute(options);
     }
 
-    public static String execute(List<String> options) {
+    public static void main(String... args) {
+        int exitCode = new CommandLine(new Main()).execute(args);
+        System.exit(exitCode);
+    }
+
+    public static int execute(List<String> options) {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command(options);
         System.out.println(options);
         try {
             Process process = processBuilder.start();
-            StringBuilder stringBuilder = new StringBuilder();
             String line;
+            /*
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((line = reader.readLine()) != null) {
-                //System.out.println(line);
-                stringBuilder.append(line);
+                System.out.println(line);
             }
             reader.close();
-            /*
+             */
             BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             while ((line = errorReader.readLine()) != null) {
                 System.out.println(line);
             }
             errorReader.close();
-             */
-            process.waitFor();
-            return stringBuilder.toString();
+            return process.waitFor();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        return null;
+        return -1;
     }
 }

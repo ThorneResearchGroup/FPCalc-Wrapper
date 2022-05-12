@@ -1,6 +1,6 @@
-package tech.tresearchgroup.fpcalc.controller;
+package tech.tresearchgroup.wrappers.fpcalc.controller;
 
-import tech.tresearchgroup.fpcalc.model.FPCalcOptions;
+import tech.tresearchgroup.wrappers.fpcalc.model.FPCalcOptions;
 
 import java.util.ArrayList;
 import java.util.List;
