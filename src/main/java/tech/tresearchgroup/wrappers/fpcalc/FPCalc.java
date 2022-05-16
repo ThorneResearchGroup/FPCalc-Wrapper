@@ -1,5 +1,6 @@
 package tech.tresearchgroup.wrappers.fpcalc;
 
+import lombok.Data;
 import picocli.CommandLine;
 import tech.tresearchgroup.wrappers.fpcalc.controller.FPCalcController;
 import tech.tresearchgroup.wrappers.fpcalc.model.FPCalcOptions;
@@ -11,29 +12,62 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+@Data
 @CommandLine.Command(name = "FPCalc", mixinStandardHelpOptions = true,
         description = "TRG FPCalc wrapper")
-public class Main implements Callable<Integer> {
+public class FPCalc implements Callable<Integer> {
     @CommandLine.Parameters(index = "0")
     private String file;
 
     @CommandLine.ArgGroup
     private FPCalcOptions fpCalcOptions;
 
+    private boolean debug = false;
+
     @Override
     public Integer call() {
+        return execute(getOptions());
+    }
+
+    public List<String> getOptions() {
         List<String> options = new ArrayList<>();
         options.add("fpcalc");
         if(fpCalcOptions != null) {
             options.addAll(FPCalcController.getOptions(fpCalcOptions));
         }
         options.add(file);
-        return execute(options);
+        return options;
     }
 
     public static void main(String... args) {
-        int exitCode = new CommandLine(new Main()).execute(args);
+        int exitCode = new CommandLine(new FPCalc()).execute(args);
         System.exit(exitCode);
+    }
+
+    public String getOutput(List<String> options) {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(options);
+        System.out.println(options);
+        try {
+            Process process = processBuilder.start();
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            while ((line = errorReader.readLine()) != null) {
+                stringBuilder.append(line);
+                if(debug) {
+                    System.out.println(line);
+                }
+            }
+            errorReader.close();
+
+            process.waitFor();
+            return stringBuilder.toString();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static int execute(List<String> options) {
