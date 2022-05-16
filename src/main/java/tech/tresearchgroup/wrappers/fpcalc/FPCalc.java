@@ -1,9 +1,11 @@
 package tech.tresearchgroup.wrappers.fpcalc;
 
+import com.google.gson.Gson;
 import lombok.Data;
 import picocli.CommandLine;
 import tech.tresearchgroup.wrappers.fpcalc.controller.FPCalcController;
-import tech.tresearchgroup.wrappers.fpcalc.model.FPCalcOptions;
+import tech.tresearchgroup.wrappers.fpcalc.model.FPCalcOutput;
+import tech.tresearchgroup.wrappers.fpcalc.model.options.FPCalcOptions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,7 +46,7 @@ public class FPCalc implements Callable<Integer> {
         System.exit(exitCode);
     }
 
-    public String getOutput(List<String> options) {
+    public FPCalcOutput getOutput(List<String> options) {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command(options);
         System.out.println(options);
@@ -63,7 +65,7 @@ public class FPCalc implements Callable<Integer> {
             reader.close();
 
             process.waitFor();
-            return stringBuilder.toString();
+            return new Gson().fromJson(stringBuilder.toString(), FPCalcOutput.class);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

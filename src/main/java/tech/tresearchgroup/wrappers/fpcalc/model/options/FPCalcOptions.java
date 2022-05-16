@@ -1,4 +1,4 @@
-package tech.tresearchgroup.wrappers.fpcalc.model;
+package tech.tresearchgroup.wrappers.fpcalc.model.options;
 
 import lombok.Data;
 import picocli.CommandLine;
