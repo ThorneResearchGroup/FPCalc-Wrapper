@@ -53,14 +53,14 @@ public class FPCalc implements Callable<Integer> {
             StringBuilder stringBuilder = new StringBuilder();
             String line;
 
-            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            while ((line = errorReader.readLine()) != null) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line);
                 if(debug) {
                     System.out.println(line);
                 }
             }
-            errorReader.close();
+            reader.close();
 
             process.waitFor();
             return stringBuilder.toString();
