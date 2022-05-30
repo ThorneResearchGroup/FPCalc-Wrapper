@@ -3,9 +3,9 @@ package tech.tresearchgroup.wrappers.fpcalc;
 import com.google.gson.Gson;
 import lombok.Data;
 import picocli.CommandLine;
+import tech.tresearchgroup.schemas.fpcalc.FPCalcOutput;
 import tech.tresearchgroup.wrappers.fpcalc.controller.FPCalcController;
-import tech.tresearchgroup.wrappers.fpcalc.model.FPCalcOutput;
-import tech.tresearchgroup.wrappers.fpcalc.model.options.FPCalcOptions;
+import tech.tresearchgroup.wrappers.fpcalc.model.FPCalcOptions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
